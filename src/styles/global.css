@@ -205,7 +205,7 @@ a:not(.brand, .button):hover {
   min-height: 64vh;
   display: grid;
   align-content: center;
-  padding-block: clamp(5rem, 12vw, 9rem);
+  padding-block: clamp(3.5rem, 8vw, 6rem);
   border-bottom: var(--hairline);
   position: relative;
 }
