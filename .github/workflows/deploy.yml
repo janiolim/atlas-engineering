@@ -28,6 +28,9 @@ jobs:
         uses: withastro/action@v3
         # withastro/action installs deps, runs the build, and uploads ./dist
         # as the Pages artifact. `site`/`base` come from astro.config.mjs.
+        with:
+          # Astro 7 requires Node >=22.12.0; the action defaults to Node 20.
+          node-version: 22
 
   deploy:
     needs: build
