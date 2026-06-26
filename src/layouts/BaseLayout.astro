@@ -6,6 +6,7 @@ import '@fontsource/public-sans/600.css';
 import '@fontsource/public-sans/700.css';
 import '@fontsource-variable/jetbrains-mono/wght.css';
 import '../styles/global.css';
+import { withBase } from '../lib/url';
 
 interface Props {
   title?: string;
@@ -40,8 +41,10 @@ const navItems = [
 ];
 
 const currentPath = Astro.url.pathname;
-const isActive = (href: string) =>
-  href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+const isActive = (href: string) => {
+  const full = withBase(href);
+  return href === '/' ? currentPath === full : currentPath.startsWith(full);
+};
 ---
 
 <!doctype html>
@@ -51,11 +54,11 @@ const isActive = (href: string) =>
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="icon" href={withBase('/favicon.ico')} />
     <link rel="canonical" href={canonicalURL} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+    <link rel="alternate" type="application/rss+xml" title={siteName} href={withBase('/rss.xml')} />
     <title>{fullTitle}</title>
 
     <!-- Open Graph -->
@@ -79,14 +82,14 @@ const isActive = (href: string) =>
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="/" aria-label="Astro Keel home">
+      <a class="brand" href={withBase('/')} aria-label="Astro Keel home">
         <span class="brand-mark" aria-hidden="true"></span>
         <span>Astro Keel</span>
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         {
           navItems.map((item) => (
-            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+            <a href={withBase(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
               {item.label}
             </a>
           ))
@@ -103,7 +106,7 @@ const isActive = (href: string) =>
 
     <footer class="site-footer">
       <p>Built with Astro Keel.</p>
-      <a href="/blog/">Notes</a>
+      <a href={withBase('/blog/')}>Notes</a>
     </footer>
 
     <script>

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { withBase } from '../../../lib/url';
 
 export async function getStaticPaths() {
   const entries = await getCollection('blog', ({ data }) => !data.draft);
@@ -35,8 +36,8 @@ const formatDate = (date: Date) =>
     <div class="index-sidebar">
       <p class="eyebrow">More tags</p>
       <nav class="tag-cloud" aria-label="Other blog tags">
-        <a href="/blog/">All posts</a>
-        {otherTags.map((item) => <a href={`/blog/tags/${item}/`}>{item}</a>)}
+        <a href={withBase('/blog/')}>All posts</a>
+        {otherTags.map((item) => <a href={withBase(`/blog/tags/${item}/`)}>{item}</a>)}
       </nav>
     </div>
 
@@ -48,7 +49,7 @@ const formatDate = (date: Date) =>
               <time datetime={post.data.publishDate.toISOString()}>{formatDate(post.data.publishDate)}</time>
               <span>{post.data.tags.join(' / ')}</span>
             </div>
-            <h2><a href={`/blog/${post.id}/`}>{post.data.title}</a></h2>
+            <h2><a href={withBase(`/blog/${post.id}/`)}>{post.data.title}</a></h2>
             <p>{post.data.description}</p>
           </article>
         ))
