@@ -1,5 +1,6 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 // Astro 7 Content Layer API: each collection declares a `loader`.
 // Authors add Markdown/MDX files under the `base` directories below.
