@@ -10,12 +10,27 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  ogType?: 'website' | 'article';
+  image?: string;
 }
 
+const siteName = 'Astro Keel';
+const defaultDescription =
+  'A minimal, neutral, and modern portfolio and blog theme for Astro.';
+
 const {
-  title = 'Astro Keel',
-  description = 'A restrained Astro portfolio and writing theme.',
+  title = siteName,
+  description = defaultDescription,
+  ogType = 'website',
+  image,
 } = Astro.props;
+
+// `Astro.site` comes from `site` in astro.config.mjs; fall back to the
+// request URL during dev so canonical/OG links still resolve.
+const siteBase = Astro.site ?? new URL(Astro.url.origin);
+const canonicalURL = new URL(Astro.url.pathname, siteBase);
+const imageURL = image ? new URL(image, siteBase) : undefined;
+const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
 
 const navItems = [
   { href: '/', label: 'Home' },
@@ -38,7 +53,24 @@ const isActive = (href: string) =>
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
-    <title>{title}</title>
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
+    <title>{fullTitle}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    {imageURL && <meta property="og:image" content={imageURL} />}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content={imageURL ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    {imageURL && <meta name="twitter:image" content={imageURL} />}
     <script is:inline>
       const storedTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
