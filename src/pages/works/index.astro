@@ -1,5 +1,13 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const works = (await getCollection('works')).sort((a, b) => {
+  const orderA = a.data.order ?? Number.MAX_SAFE_INTEGER;
+  const orderB = b.data.order ?? Number.MAX_SAFE_INTEGER;
+  if (orderA !== orderB) return orderA - orderB;
+  return b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+});
 ---
 
 <BaseLayout title="Works | Astro Keel" description="Selected work index for Astro Keel.">
@@ -12,7 +20,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </p>
   </section>
 
-  <section class="section empty-state">
-    <p>Add Markdown or MDX entries under <code>src/content/works</code> to populate this page.</p>
+  <section class="section work-list" aria-label="Selected works">
+    {
+      works.map((work) => (
+        <article class="work-card">
+          <p class="entry-meta">{work.data.tech.join(' / ')}</p>
+          <h2><a href={`/works/${work.id}/`}>{work.data.title}</a></h2>
+          <p>{work.data.description}</p>
+        </article>
+      ))
+    }
   </section>
 </BaseLayout>
