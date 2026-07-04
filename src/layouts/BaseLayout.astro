@@ -15,9 +15,10 @@ interface Props {
   image?: string;
 }
 
-const siteName = 'Astro Keel';
+const siteName = 'Atlas';
+
 const defaultDescription =
-  'A minimal, neutral, and modern portfolio and blog theme for Astro.';
+  'Portfólio técnico em engenharia elétrica, física experimental e sistemas embarcados.';
 
 const {
   title = siteName,
@@ -26,18 +27,16 @@ const {
   image,
 } = Astro.props;
 
-// `Astro.site` comes from `site` in astro.config.mjs; fall back to the
-// request URL during dev so canonical/OG links still resolve.
 const siteBase = Astro.site ?? new URL(Astro.url.origin);
 const canonicalURL = new URL(Astro.url.pathname, siteBase);
 const imageURL = image ? new URL(image, siteBase) : new URL(withBase('/og.jpg'), siteBase);
 const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
 
 const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/about/', label: 'About' },
-  { href: '/works/', label: 'Works' },
-  { href: '/blog/', label: 'Blog' },
+  { href: '/', label: 'Início' },
+  { href: '/about/', label: 'Sobre' },
+  { href: '/works/', label: 'Projetos' },
+  { href: '/blog/', label: 'Notas' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -48,17 +47,20 @@ const isActive = (href: string) => {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
+
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <link rel="icon" href={withBase('/favicon.ico')} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
     <link rel="alternate" type="application/rss+xml" title={siteName} href={withBase('/rss.xml')} />
+
     <title>{fullTitle}</title>
 
     <!-- Open Graph -->
@@ -74,18 +76,21 @@ const isActive = (href: string) => {
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     {imageURL && <meta name="twitter:image" content={imageURL} />}
+
     <script is:inline>
       const storedTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       document.documentElement.dataset.theme = storedTheme || (prefersDark ? 'dark' : 'light');
     </script>
   </head>
+
   <body>
     <header class="site-header">
-      <a class="brand" href={withBase('/')} aria-label="Astro Keel home">
+      <a class="brand" href={withBase('/')} aria-label="Atlas home">
         <span class="brand-mark" aria-hidden="true"></span>
-        <span>Astro Keel</span>
+        <span>Atlas</span>
       </a>
+
       <nav class="site-nav" aria-label="Main navigation">
         {
           navItems.map((item) => (
@@ -95,6 +100,7 @@ const isActive = (href: string) => {
           ))
         }
       </nav>
+
       <button class="theme-toggle" type="button" aria-label="Toggle color theme" data-theme-toggle>
         <span aria-hidden="true"></span>
       </button>
@@ -105,8 +111,8 @@ const isActive = (href: string) => {
     </main>
 
     <footer class="site-footer">
-      <p>Built with Astro Keel.</p>
-      <a href={withBase('/blog/')}>Notes</a>
+      <p>Atlas — engenharia aplicada e documentação técnica.</p>
+      <a href={withBase('/blog/')}>Notas</a>
     </footer>
 
     <script>

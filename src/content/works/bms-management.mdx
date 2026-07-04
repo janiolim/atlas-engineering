@@ -1,0 +1,26 @@
+---
+title: "BMS - Monitoramento e Proteção de Células"
+description: "Projeto de hardware e software para gerenciamento de parâmetros críticos (tensão, corrente e temperatura) em bancos de baterias."
+category: "engineering"
+thumbnail: "./bms-management.jpg"
+tech:
+  - Eletrônica Analógica
+  - Sistemas Embarcados
+  - Sensores
+order: 1
+publishDate: 2026-07-04
+---
+
+## Brief
+
+Garantir a integridade física e estender a vida útil de bancos de baterias de íons de lítio exige um monitoramento rigoroso e em tempo real de cada célula, prevenindo sobrecargas e sobreaquecimentos.
+
+## Approach
+
+Desenvolvimento de uma arquitetura de aquisição de dados multicanal conectada a um firmware de controle que interrompe o fluxo de carga/descarga e ativa o balanceamento sempre que uma célula atinge o limiar crítico.
+
+```ts
+export const monitorCellStatus = (voltage: number, temperature: number) => ({
+  status: voltage > 4.25 || temperature > 50 ? 'CRITICAL_SHUTDOWN' : 'OPERATIONAL',
+  balanceActive: voltage > 4.15 && voltage <= 4.25
+});

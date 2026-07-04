@@ -3,35 +3,91 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { withBase } from '../../lib/url';
 
-const works = (await getCollection('works')).sort((a, b) => {
-  const orderA = a.data.order ?? Number.MAX_SAFE_INTEGER;
-  const orderB = b.data.order ?? Number.MAX_SAFE_INTEGER;
-  if (orderA !== orderB) return orderA - orderB;
-  return b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
-});
+const works = await getCollection('works');
+
+/* Safe grouping with fallback */
+const engineering = works.filter(w => w.data.category === 'engineering');
+const research = works.filter(w => w.data.category === 'research');
+const theory = works.filter(w => w.data.category === 'theory');
+
+/* Works without category go to Engineering by default (prevents empty UI) */
+const uncategorized = works.filter(w => !w.data.category);
+engineering.push(...uncategorized);
+
+/* Sort helper */
+const sortWorks = (list) =>
+  list.sort((a, b) => {
+    const orderA = a.data.order ?? Number.MAX_SAFE_INTEGER;
+    const orderB = b.data.order ?? Number.MAX_SAFE_INTEGER;
+
+    if (orderA !== orderB) return orderA - orderB;
+    return b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+  });
+
+const eng = sortWorks(engineering);
+const res = sortWorks(research);
+const the = sortWorks(theory);
 ---
 
-<BaseLayout title="Works" description="Selected projects and case studies — Astro Keel.">
+<BaseLayout title="Trabalhos" description="Projetos e estudos selecionados">
+
   <section class="page-head section">
-    <p class="eyebrow">Works</p>
-    <h1>Selected projects and case studies.</h1>
+    <p class="eyebrow">Trabalhos</p>
+    <h1>Projetos e estudos selecionados.</h1>
     <p class="lead">
-      The works collection is typed for descriptions, technology lists, external links,
-      repositories, thumbnails, ordering, and publish dates.
+      Engenharia, pesquisa e física teórica organizadas em camadas estruturadas.
     </p>
   </section>
 
-  <section class="section" aria-label="Selected works">
+  <section class="section" aria-label="Projetos de engenharia">
+    <h2>Engenharia</h2>
     <div class="work-list">
-      {
-        works.map((work) => (
-          <article class="work-card">
-            <p class="entry-meta">{work.data.tech.join(' / ')}</p>
-            <h2><a href={withBase(`/works/${work.id}/`)}>{work.data.title}</a></h2>
-            <p>{work.data.description}</p>
-          </article>
-        ))
-      }
+      {eng.map((work) => (
+        <article class="work-card">
+          <p class="entry-meta">{work.data.tech?.join(' / ')}</p>
+          <h2>
+            <a href={withBase(`/works/${work.id}/`)}>
+              {work.data.title}
+            </a>
+          </h2>
+          <p>{work.data.description}</p>
+        </article>
+      ))}
     </div>
   </section>
+
+  <section class="section" aria-label="Projetos de pesquisa">
+    <h2>Pesquisa</h2>
+    <div class="work-list">
+      {res.map((work) => (
+        <article class="work-card">
+          <p class="entry-meta">{work.data.tech?.join(' / ')}</p>
+          <h2>
+            <a href={withBase(`/works/${work.id}/`)}>
+              {work.data.title}
+            </a>
+          </h2>
+          <p>{work.data.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section" aria-label="Projetos teóricos">
+    <h2>Teoria</h2>
+    <div class="work-list">
+      {the.map((work) => (
+        <article class="work-card">
+          <p class="entry-meta">{work.data.tech?.join(' / ')}</p>
+          <h2>
+            <a href={withBase(`/works/${work.id}/`)}>
+              {work.data.title}
+            </a>
+          </h2>
+          <p>{work.data.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
 </BaseLayout>

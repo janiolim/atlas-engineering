@@ -1,10 +1,11 @@
 ---
-title: "Content Layer Notes"
+title: "Content Layer Notes B2"
 publishDate: 2026-02-03
 tags:
   - astro
   - content
 description: "Practical notes for keeping Astro content collections predictable."
+category: research
 draft: false
 ---
 

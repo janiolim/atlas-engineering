@@ -10,6 +10,7 @@ const works = defineCollection({
     z.object({
       title: z.string(),
       description: z.string(),
+      category: z.enum(['engineering', 'research', 'theory']),
       tech: z.array(z.string()),
       link: z.string().url().optional(),
       repo: z.string().url().optional(),
@@ -29,7 +30,7 @@ const blog = defineCollection({
       description: z.string(),
       draft: z.boolean().default(false),
       heroImage: image().optional(),
+      category: z.enum(['engineering', 'research', 'theory']),
     }),
 });
-
 export const collections = { works, blog };
